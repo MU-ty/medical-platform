@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css"
+        rel="stylesheet"
+    />
+    <title>AI 体质解析 - 云苓智体</title>
+    <style>
+        /* 为聊天界面添加特定样式 */
+        .chat__container {
+            max-width: 800px; /* 或者根据需要调整宽度 */
+            margin: 2rem auto; /* 上下边距，左右居中 */
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 70vh; /* 设定一个高度 */
+            border: 1px solid var(--primary-color-light);
+        }
+
+        .chat__messages {
+            flex-grow: 1; /* 占据剩余空间 */
+            overflow-y: auto; /* 内容过多时显示滚动条 */
+            margin-bottom: 1rem;
+            padding-right: 1rem; /* 防止滚动条遮挡内容 */
+        }
+
+        .chat__message {
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            max-width: 75%;
+            line-height: 1.5;
+        }
+
+        .chat__message--user {
+            background-color: var(--primary-color-light);
+            color: var(--text-dark);
+            border-bottom-right-radius: 0;
+            margin-left: auto; /* 用户消息靠右 */
+            text-align: right;
+        }
+
+        .chat__message--ai {
+            background-color: #f0f0f0; /* AI 消息用浅灰色 */
+            color: var(--text-dark);
+            border-bottom-left-radius: 0;
+            margin-right: auto; /* AI 消息靠左 */
+            text-align: left;
+        }
+
+         .chat__message--ai strong {
+             color: var(--primary-color); /* AI 消息中的重点文字 */
+         }
+
+        .chat__input-area {
+            display: flex;
+            gap: 0.5rem;
+            border-top: 1px solid var(--primary-color-light);
+            padding-top: 1rem;
+        }
+
+        .chat__input-area input[type="text"] {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--primary-color-light);
+            border-radius: 5px;
+            outline: none;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .chat__input-area input[type="text"]:focus {
+             border-color: var(--primary-color);
+        }
+
+        .chat__input-area .btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color); 
+        }
+         .chat__input-area .btn:hover {
+             background-color: var(--primary-color-dark);
+         }
+
+    </style>
+</head>
+<body>
+    <header style="position: sticky;top:0;z-index: 1000;">
+        <nav class="section_container nav__container">
+            <div class="nav__logo"><span>云苓智体</span>中医体质AI解析与科学减肥服务平台</div>
+            <ul class="nav__links">
+                <li class="link"><a href="index.html">主页</a></li>
+                <li class="link"><a href="#">平台简介</a></li>
+                <li class="link"><a href="chat.html">AI解析</a></li> 
+                <li class="link"><a href="#">减肥服务</a></li>
+                <li class="link"><a href="#">关于我们</a></li>
+            </ul>
+            <button class="btn">联系我们</button>
+        </nav>
+    </header>
+
+    <section class="section__container chat_content_container">
+        <h2 class="section__header" style="text-align: center; margin-bottom: 2rem;">AI 体质解析对话</h2>
+        <div class="chat__container">
+            <div class="chat__messages" id="chatMessages">
+                <div class="chat__message chat__message--ai">
+                    您好！我是您的中医体质AI助手 <strong>云苓</strong>。请问有什么可以帮您的？您可以描述一下您最近的身体感受。
+                </div>
+                
+            </div>
+            <div class="chat__input-area">
+                <input type="text" id="chatInput" placeholder="请在此输入您的情况...">
+                <button class="btn" id="sendBtn">发送</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="section__container footer__container">
+            <div class="footer__col">
+              <h3>云苓<span>智体</span></h3>
+              <p>
+                我们致力于结合传统中医智慧与现代AI技术，为您提供个性化的体质分析和科学减肥方案。
+              </p>
+              <p>
+                信赖我们，让我们一同开启您的健康之旅。
+              </p>
+            </div>
+            <div class="footer__col">
+              <h4>关于我们</h4>
+              <p>主页</p>
+              <p>平台简介</p>
+              <p>AI解析</p>
+              <p>减肥服务</p>
+              <p>联系我们</p>
+            </div>
+            <div class="footer__col">
+              <h4>服务支持</h4>
+              <p>常见问题</p>
+              <p>隐私政策</p>
+              <p>服务条款</p>
+              <p>技术支持</p>
+            </div>
+            <div class="footer__col">
+              <h4>联系方式</h4>
+              <p><i class="ri-map-pin-2-fill"></i>桂林电子科技大学花江校区</p>
+              <p><i class="ri-mail-fill"></i> support@yunlingzhiti.com虚拟</p>
+              <p><i class="ri-phone-fill"></i> (+86) 400-XXX-XXXX虚拟</p>
+            </div>
+          </div>
+          <div class="footer__bar">
+            <div class="footer__bar__content">
+              <p>© 2025 云苓智体. All rights reserved.</p>
+              <div class="footer__socials">
+                <span><i class="ri-instagram-line"></i></span>
+                <span><i class="ri-facebook-fill"></i></span>
+                <span><i class="ri-wechat-fill"></i></span>
+                <span><i class="ri-twitter-fill"></i></span>
+              </div>
+            </div>
+          </div>
+    </footer>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        // 模拟 AI 回复的函数
+        function simulateAiResponse(userMessageText) {
+            let aiResponseText = "嗯嗯，我正在思考您说的情况..."; // 默认回复
+
+            // 基于用户输入进行简单的模拟回复
+            if (userMessageText.includes("你好") || userMessageText.includes("您好")) {
+                aiResponseText = "您好！很高兴为您服务。";
+            } else if (userMessageText.includes("疲惫") || userMessageText.includes("累")) {
+                aiResponseText = "了解到您感到<strong>疲惫</strong>。除了这个，还有其他不适吗？比如睡眠质量如何？";
+            } else if (userMessageText.includes("出汗")) {
+                aiResponseText = "关于<strong>易出汗</strong>，是白天活动时出汗多，还是晚上睡觉时出汗多呢？";
+            } else if (userMessageText.includes("舌苔")) {
+                aiResponseText = "观察舌苔是中医诊断的重要部分。请问您的舌苔是<strong>薄白苔</strong>、<strong>黄腻苔</strong>还是其他状态？";
+            } else if (userMessageText.includes("谢谢")) {
+                aiResponseText = "不客气，能帮到您是我的荣幸。";
+            } else {
+                 aiResponseText = `关于“${userMessageText}”，能否请您再详细描述一下？或者告诉我其他相关的症状？`;
+            }
+
+
+            // 创建 AI 消息元素
+            const aiMessageElement = document.createElement('div');
+            aiMessageElement.classList.add('chat__message', 'chat__message--ai');
+            aiMessageElement.innerHTML = aiResponseText; // 使用 innerHTML 以便解析 strong 标签
+
+            // 将 AI 消息添加到聊天记录中
+            chatMessages.appendChild(aiMessageElement);
+            // 滚动到底部
+            scrollToBottom();
+        }
+
+        // 发送消息的函数
+        function sendMessage() {
+            const messageText = chatInput.value.trim(); // 获取输入内容并去除首尾空格
+
+            if (messageText !== "") {
+                // 1. 创建用户消息元素
+                const userMessageElement = document.createElement('div');
+                userMessageElement.classList.add('chat__message', 'chat__message--user');
+                userMessageElement.textContent = messageText;
+
+                // 2. 将用户消息添加到聊天记录中
+                chatMessages.appendChild(userMessageElement);
+
+                // 3. 清空输入框
+                chatInput.value = "";
+
+                // 4. 滚动到底部
+                scrollToBottom();
+
+                // 5. 模拟 AI 回复 (延迟一段时间，模拟思考)
+                setTimeout(() => {
+                    simulateAiResponse(messageText);
+                }, 1000); // 延迟 1 秒
+
+                 // 让输入框重新获得焦点，方便连续输入
+                 chatInput.focus();
+            }
+        }
+
+        // 滚动到聊天记录底部的函数
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 事件监听：点击发送按钮
+        sendBtn.addEventListener('click', sendMessage);
+
+        // 事件监听：在输入框按 Enter 键
+        chatInput.addEventListener('keypress', function(event) {
+            // 检查是否按下了 Enter 键 (keyCode 13)
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                event.preventDefault(); // 阻止默认的 Enter 行为（如换行）
+                sendMessage();
+            }
+        });
+
+         // 初始加载时滚动到底部（如果已有消息）
+         scrollToBottom();
+         // 页面加载后让输入框自动获得焦点
+         chatInput.focus();
+
+    </script>
+</body>
+</html>
