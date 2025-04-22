@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css"
+        rel="stylesheet"
+    />
+    <title>体重实时监测 - 云苓智体</title>
+    <!-- 引入 VChart -->
+    <script src="https://unpkg.com/@visactor/vchart/build/index.min.js"></script>
+
+    <style>
+        .monitoring__container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 2rem;
+            align-items: flex-start; 
+        }
+
+        .data-card {
+            background-color: var(--white);
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--primary-color-light);
+        }
+
+        .data-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+         .data-card h3 i {
+             font-size: 1.5rem;
+         }
+
+
+        .current-weight p {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+         .current-weight p span {
+             font-size: 1rem;
+             font-weight: 400;
+             color: var(--text-light);
+         }
+        .current-weight .update-time {
+             font-size: 0.9rem;
+             color: var(--text-light);
+             text-align: center;
+        }
+
+        .weight-trend p {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .weight-trend p span {
+            font-weight: 600;
+        }
+        .trend-up {
+            color: #e74c3c; 
+        }
+        .trend-down {
+            color: var(--primary-color-dark);
+        }
+        .trend-stable {
+            color: var(--text-light); 
+        }
+         .trend-icon {
+             font-size: 1.2rem;
+             margin-left: 0.3rem;
+         }
+
+        .input-form h3 {
+            margin-bottom: 1rem;
+        }
+        .input-form form {
+            display: grid;
+            gap: 1rem;
+        }
+        .input-form label {
+            font-weight: 500;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+        .input-form input[type="number"],
+        .input-form input[type="date"] {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--primary-color-light);
+            border-radius: 5px;
+            outline: none;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box; 
+        }
+         .input-form input:focus {
+             border-color: var(--primary-color);
+         }
+        .input-form .btn {
+            background-color: var(--secondary-color); 
+            width: 100%;
+        }
+         .input-form .btn:hover {
+             background-color: #e67e22; 
+         }
+
+         #weightChartContainer {
+             height: 300px; 
+             width: 100%;
+         }
+
+    </style>
+</head>
+<body>
+    <header style="position: sticky;top:0;z-index: 1000;">
+        <nav class="section_container nav_container">
+            <div class="nav__logo"><span>云苓智体</span>中医体质AI解析与科学减肥服务平台</div>
+            <ul class="nav__links">
+                <li class="link"><a href="index.html" target="_blank">主页</a></li>
+                <li class="link"><a href="#">平台简介</a></li>
+                <li class="link"><a href="chat.html" target="_blank">AI解析</a></li>
+                <li class="link"><a href="monitor.html" target="_blank">减肥服务</a></li> 
+                <li class="link"><a href="monitor.html" target="_blank">数据监测</a></li>
+               <li class="link"><a href="./products.html" target="_blank">健康产品</a></li>
+                <li class="link"><a href="#">关于我们</a></li>
+            </ul>
+            <button class="btn">联系我们</button>
+        </nav>
+    </header>
+    
+    <section class="section__container">
+        <h2 class="section__header" style="text-align: center; margin-bottom: 3rem;">体重实时数据监测</h2>
+
+        <div class="monitoring__container">
+    
+            <div class="data-card current-weight">
+                <h3><i class="ri-scales-3-line"></i>当前体重</h3>
+                <p id="currentWeightValue">65.8 <span>kg</span></p>
+                <p class="update-time" id="lastUpdateTime">最后更新: 今天 08:15</p>
+            </div>
+
+            <div class="data-card weight-trend">
+                 <h3><i class="ri-line-chart-line"></i>体重趋势</h3>
+                 <p>本周变化: <span class="trend-down">-0.5 kg <i class="ri-arrow-down-line trend-icon"></i></span></p>
+                 <p>本月变化: <span class="trend-down">-1.2 kg <i class="ri-arrow-down-line trend-icon"></i></span></p>
+                 <p>目标差距: <span class="trend-up">+3.8 kg <i class="ri-arrow-up-line trend-icon"></i></span></p> <!-- 示例：假设目标是62kg -->
+            </div>
+
+             <div class="data-card input-form">
+                <h3><i class="ri-edit-line"></i>记录体重</h3>
+                <form id="weightForm">
+                    <div>
+                        <label for="weightInput">输入体重 (kg):</label>
+                        <input type="number" id="weightInput" name="weight" step="0.1" required placeholder="例如: 65.5">
+                    </div>
+                    <div>
+                        <label for="dateInput">选择日期:</label>
+                        <input type="date" id="dateInput" name="date" required>
+                    </div>
+                    <button type="submit" class="btn">保存记录</button>
+                </form>
+            </div>
+
+            <div class="data-card weight-chart" style="grid-column: 1 / -1;"> 
+                <h3><i class="ri-bar-chart-grouped-line"></i>体重变化曲线</h3>
+                <div id="weightChartContainer"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="section__container footer__container">
+            <div class="footer__col">
+              <h3>云苓<span>智体</span></h3>
+              <p>
+                我们致力于结合传统中医智慧与现代AI技术，为您提供个性化的体质分析和科学减肥方案。
+              </p>
+              <p>
+                信赖我们，让我们一同开启您的健康之旅。
+              </p>
+            </div>
+            <div class="footer__col">
+              <h4>关于我们</h4>
+              <p><a href="./index.html" target="_blank">主页</a></p>
+              <p>平台简介</p>
+              <p><a href="./chat.html" target="_blank">AI解析</a></p>
+              <p><a href="./jianfei.html" target="_blank">减肥服务</a></p>
+              <p><a href="./products.html" target="_blank">健康产品</a></p>
+              <p>联系我们</p>
+            </div>
+            <div class="footer__col">
+              <h4>服务支持</h4>
+              <p>常见问题</p>
+              <p>隐私政策</p>
+              <p>服务条款</p>
+              <p>技术支持</p>
+            </div>
+            <div class="footer__col">
+              <h4>联系方式</h4>
+              <p><i class="ri-map-pin-2-fill"></i> 桂林电子科技大学花江校区</p>
+              <p><i class="ri-mail-fill"></i> support@yunlingzhiti.com</p>
+              <p><i class="ri-phone-fill"></i> (+86) 400-XXX-XXXX</p>
+            </div>
+          </div>
+          <div class="footer__bar">
+            <div class="footer__bar__content">
+              <p>© 2025 云苓智体. All rights reserved.</p>
+              <div class="footer__socials">
+                <span><i class="ri-instagram-line"></i></span>
+                <span><i class="ri-facebook-fill"></i></span>
+                <span><i class="ri-wechat-fill"></i></span>
+                <span><i class="ri-twitter-fill"></i></span>
+              </div>
+            </div>
+          </div>
+    </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const weightForm = document.getElementById('weightForm');
+        const dateInput = document.getElementById('dateInput');
+        const chartContainer = document.getElementById('weightChartContainer'); 
+        const currentWeightValueElement = document.getElementById('currentWeightValue');
+        const lastUpdateTimeElement = document.getElementById('lastUpdateTime');
+
+        let vchart = null;
+
+        const initialData = [ 
+          { date: '2025-04-01', weight: 67.0 },
+          { date: '2025-04-03', weight: 66.8 },
+          { date: '2025-04-05', weight: 66.9 },
+          { date: '2025-04-08', weight: 66.5 },
+          { date: '2025-04-11', weight: 66.2 },
+          { date: '2025-04-14', weight: 66.0 },
+          { date: '2025-04-17', weight: 65.9 },
+          { date: '2025-04-20', weight: 65.8 },
+        ];
+
+        const spec = {
+          type: 'line',
+          data: {
+            id: 'data',
+            values: initialData
+          },
+          xField: 'date',
+          yField: 'weight',
+          axes: [
+            { orient: 'bottom', type: 'band', title: { visible: true, text: '日期' } },
+            { orient: 'left', type: 'linear', title: { visible: true, text: '体重 (kg)' }, nice: true }
+          ],
+          tooltip: {
+             visible: true,
+             mark: { title: { value: d => `${d.date}` }, content: [{ key: '体重', value: d => `${d.weight} kg` }] }
+          },
+          point: {
+            style: {
+              fill: 'var(--primary-color)'
+            }
+          },
+          line: {
+             style: {
+                 stroke: 'var(--primary-color)',
+                 lineWidth: 2
+             }
+          }
+        };
+
+        console.log("Checking window.VChart:", window.VChart);
+        console.log("Checking window.VChart.VChart:", window.VChart?.VChart);
+        console.log("Checking window.VChart.default:", window.VChart?.default);
+        
+        if (typeof window.VChart === 'object' && typeof window.VChart.VChart === 'function') {
+                console.log("window.VChart.VChart is a function. Attempting to create chart...");
+                console.log("Chart container element:", chartContainer);
+
+                try {
+                    if (!chartContainer) {
+                        throw new Error("Chart container element not found!");
+                    }
+                    vchart = new window.VChart.VChart(spec, { dom: chartContainer });
+                    console.log("VChart instance created:", vchart);
+                    vchart.renderSync();
+                    console.log("VChart rendered successfully.");
+
+                    window.addEventListener('resize', () => {
+                      if (vchart) {
+                          vchart.resize();
+                      }
+                    });
+                } catch (error) {
+                     console.error("Error creating or rendering VChart instance:", error);
+                     if(chartContainer) {
+                         chartContainer.innerHTML = `<p style="color: red; text-align: center;">创建图表时出错: ${error.message}</p>`;
+                     } else {
+                         console.error("Chart container element was not found when trying to display error.");
+                     }
+                }
+            } else {
+                console.error("VChart library loaded, but window.VChart.VChart constructor not found.");
+                if(chartContainer) {
+                    chartContainer.innerHTML = '<p style="color: red; text-align: center;">无法找到 VChart 构造函数。</p>';
+                }
+            }
+
+        // 表单
+        if (weightForm && currentWeightValueElement && lastUpdateTimeElement) { 
+                // 日期输入默认今天
+                if(dateInput) {
+                    dateInput.valueAsDate = new Date();
+                }
+
+                weightForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const weightInput = document.getElementById('weightInput'); 
+                    const weight = weightInput.value; 
+                    const date = dateInput.value;
+
+                    if (!weight || isNaN(parseFloat(weight))) {
+                        alert("请输入有效的体重数值！");
+                        return;
+                    }
+
+                    const weightFloat = parseFloat(weight).toFixed(1); // 
+
+                    console.log(`记录体重: ${weightFloat} kg, 日期: ${date}`);
+            
+                    currentWeightValueElement.innerHTML = `${weightFloat} <span>kg</span>`;
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+                    
+                    const today = new Date();
+                    const inputDate = new Date(date + 'T00:00:00'); 
+                    let datePrefix = '';
+                    if (inputDate.toDateString() === today.toDateString()) {
+                        datePrefix = '今天';
+                    } else {
+                        datePrefix = date;
+                    }
+                    lastUpdateTimeElement.textContent = `最后更新: ${datePrefix} ${timeString}`;
+                   
+                    //vchart
+                    if (vchart) {
+                        const newDataPoint = { date: date, weight: parseFloat(weightFloat) }; 
+                        const currentData = vchart.getSpec().data.values;
+                        const existingIndex = currentData.findIndex(item => item.date === date);
+                        if (existingIndex > -1) {
+                            currentData[existingIndex].weight = parseFloat(weightFloat);
+                        } else {
+                            currentData.push(newDataPoint);
+                        }
+                        currentData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                        vchart.updateData('data', currentData);
+                    } else {
+                        console.warn("VChart instance not available for data update.");
+                    }
+
+                    weightForm.reset();
+                    if(dateInput) {
+                        dateInput.valueAsDate = new Date();
+                    }
+                    weightInput.focus();
+                });
+            }
+
+        }); 
+
+</script>
+
+</body>
+</html>
