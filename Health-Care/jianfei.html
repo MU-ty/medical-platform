@@ -1,0 +1,237 @@
+````html
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>科学减肥服务 - 了解肥胖危害</title>
+  <!-- 链接你的 CSS 文件 -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- 引入图标库 (例如 Remix Icon) -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet"/>
+  <style>
+    /* 为新的 risks section 添加一些基本样式 (可以移到 styles.css) */
+    .risks__container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        background-color: var(--extra-light); /* 使用浅色背景区分 */
+    }
+    .risks__grid {
+        margin-top: 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 响应式网格 */
+        gap: 1.5rem;
+    }
+    .risk__card {
+        background-color: var(--white);
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+    .risk__card:hover {
+        transform: translateY(-5px);
+    }
+    .risk__card span {
+        display: inline-block;
+        padding: 10px 15px;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+        color: var(--white);
+        background-color: var(--primary-color);
+        border-radius: 8px;
+    }
+    .risk__card h4 {
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+    .risk__card p {
+        color: var(--text-light);
+        line-height: 1.6;
+    }
+    .risks__footer {
+        margin-top: 3rem;
+        text-align: center;
+    }
+    .risks__footer p {
+        max-width: 600px;
+        margin: 0 auto 1.5rem;
+        color: var(--text-dark);
+        font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- 导航栏 (与 index.html 对应) -->
+    <nav class="section_container nav_container">
+      <div class="nav__logo"><span>云苓智体</span><br>中医体质AI解析与科学减肥服务平台</div>
+      <ul class="nav__links">
+        <li class="link"><a href="index.html" target="_blank">主页</a></li>
+        <li class="link"><a href="#">平台简介</a></li>
+        <li class="link"><a href="chat.html" target="_blank">AI解析</a></li>
+        <li class="link"><a href="jianfei.html" target="_blank">减肥服务</a></li>
+        <li class="link"><a href="monitor.html" target="_blank">数据监测</a></li>
+        <li class="link"><a href="./products.html" target="_blank">健康产品</a></li>
+        <li class="link"><a href="#">关于我们</a></li>
+      </ul>
+      <!-- <button class="btn">联系我们</button> --> <!-- 根据 index.html 决定是否保留 -->
+    </nav>
+    <!-- 头部介绍区域 -->
+    <div class="section__container header__container">
+      <div class="header__content">
+        <h1>正视肥胖危害，科学管理体重</h1>
+        <p>
+          肥胖不仅影响外观，更是多种慢性疾病的重要诱因。<br>
+          了解风险，采取行动，拥抱健康生活。
+        </p>
+        <button class="btn" onclick="document.getElementById('appointment').scrollIntoView({behavior: 'smooth'});">开始健康咨询</button>
+      </div>
+      <div class="header__form">
+        <form id="appointment">
+          <h4>预约免费咨询</h4>
+          <input type="text" placeholder="您的姓名" required />
+          <input type="tel" placeholder="您的电话" required />
+          <input type="number" placeholder="当前体重 (kg)" />
+          <button class="btn form__btn">提交预约</button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <!-- 肥胖危害区域 -->
+  <section id="obesity-risks" class="section__container risks__container">
+    <h2 class="section__header">肥胖的主要健康风险</h2>
+    <div class="risks__grid">
+      <div class="risk__card">
+        <span><i class="ri-heart-pulse-fill"></i></span>
+        <h4>心血管疾病</h4>
+        <p>增加高血压、冠心病、中风的风险。</p>
+      </div>
+      <div class="risk__card">
+        <span><i class="ri-first-aid-kit-fill"></i></span> <!-- 替换为糖尿病相关图标 -->
+        <h4>2型糖尿病</h4>
+        <p>肥胖是导致胰岛素抵抗和2型糖尿病的主要因素。</p>
+      </div>
+      <div class="risk__card">
+        <span><i class="ri-lungs-fill"></i></span>
+        <h4>呼吸系统问题</h4>
+        <p>可能导致睡眠呼吸暂停综合症和哮喘加重。</p>
+      </div>
+      <div class="risk__card">
+        <span><i class="ri-body-scan-line"></i></span> <!-- 替换为骨骼相关图标 -->
+        <h4>骨关节疾病</h4>
+        <p>增加关节负担，易引发骨关节炎，尤其在膝盖和髋部。</p>
+      </div>
+       <div class="risk__card">
+        <span><i class="ri-shield-cross-line"></i></span> <!-- 替换为癌症相关图标 -->
+        <h4>某些癌症风险增加</h4>
+        <p>与多种癌症（如结直肠癌、乳腺癌等）风险升高有关。</p>
+      </div>
+       <div class="risk__card">
+        <span><i class="ri-mental-health-fill"></i></span>
+        <h4>心理健康问题</h4>
+        <p>可能导致自信心下降、抑郁、焦虑等心理问题。</p>
+      </div>
+    </div>
+    <div class="risks__footer">
+        <p>了解风险是改变的第一步。我们提供科学的体重管理方案，助您远离健康威胁。</p>
+        <button class="btn" onclick="document.getElementById('appointment').scrollIntoView({behavior: 'smooth'});">立即咨询专家</button>
+    </div>
+  </section>
+
+  <!-- 页脚区域 (与 index.html 对应) -->
+  <footer id="contact" class="footer">
+    <div class="section__container footer__container">
+      <div class="footer__col">
+        <h3><span>云苓智体</span><br>中医体质AI解析与科学减肥服务平台</h3>
+        <p>结合AI与中医智慧，为您提供个性化健康管理方案。</p>
+      </div>
+      <div class="footer__col">
+        <h4>快速链接</h4>
+        <p><a href="index.html" target="_blank">主页</a></p>
+        <p><a href="chat.html" target="_blank">AI解析</a></p>
+        <p><a href="monitor.html" target="_blank">数据监测</a></p>
+        <p><a href="./products.html" target="_blank">健康产品</a></p>
+        <p><a href="#">平台简介</a></p> 
+        <p><a href="#">关于我们</a></p> 
+      </div>
+      <div class="footer__col">
+        <h4>联系我们</h4>
+        <p><i class="ri-map-pin-line"></i> 桂林电子科技大学花江校区</p>
+        <p><i class="ri-mail-line"></i> support@yunlingzhiti.com</p>
+        <p><i class="ri-phone-line"></i> (+86) 400-000-0000</p>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <div class="footer__bar__content">
+        <p>©2025 云苓智体. All rights reserved.</p>
+        <div class="footer__socials">
+          <span><i class="ri-wechat-fill"></i></span>
+          <span><i class="ri-weibo-fill"></i></span>
+          <!-- 根据需要添加更多社交图标 -->
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // --- 表单交互 ---
+      const appointmentForm = document.getElementById('appointment');
+      if (appointmentForm) {
+        appointmentForm.addEventListener('submit', function(event) {
+          event.preventDefault(); // 阻止表单默认提交行为
+
+          const nameInput = appointmentForm.querySelector('input[placeholder="您的姓名"]');
+          const phoneInput = appointmentForm.querySelector('input[placeholder="您的电话"]');
+
+          if (!nameInput.value || !phoneInput.value) {
+            alert('请填写姓名和电话！');
+            return;
+          }
+
+          console.log('表单提交:', {
+            name: nameInput.value,
+            phone: phoneInput.value,
+            currentWeight: appointmentForm.querySelector('input[placeholder="当前体重 (kg)"]').value
+          });
+
+          alert(`感谢 ${nameInput.value}！您的预约已提交，我们会尽快与您联系。`);
+          appointmentForm.reset();
+        });
+      }
+
+      // --- 平滑滚动 (只处理页脚的联系我们链接，如果需要的话) ---
+      // 注意：导航栏现在没有指向 #contact 的链接了，所以这部分可能不需要
+      // const contactLink = document.querySelector('.nav__links a[href="#contact"]');
+      // if(contactLink) { ... }
+
+
+      // --- 头部/风险区按钮滚动到表单 ---
+      // 选择所有包含 onclick 属性且值包含 'appointment' 的 .btn 元素
+      const consultButtons = document.querySelectorAll('.btn[onclick*="appointment"]');
+      consultButtons.forEach(button => {
+          // 检查按钮是否真的有 onclick 属性，以防万一
+          if (button.hasAttribute('onclick')) {
+              // 可以选择移除 onclick 并用 JS 完全控制，或者保留 HTML 中的 onclick
+              // 这里我们假设 HTML 中的 onclick 存在且有效，JS 部分可以作为备用或移除
+              // 如果要用 JS 完全控制:
+              // button.removeAttribute('onclick');
+              // button.addEventListener('click', function(e) {
+              //     e.preventDefault(); // 如果按钮是<a>标签
+              //     const targetElement = document.getElementById('appointment');
+              //     if (targetElement) {
+              //         targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              //     }
+              // });
+          }
+      });
+
+    }); // 结束 DOMContentLoaded
+  </script>
+</body>
+</html>
