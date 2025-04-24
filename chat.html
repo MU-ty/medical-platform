@@ -235,7 +235,31 @@
             paywall: [
                 "看来您需要更专业的个性化建议。要获取完整的体质分析和定制方案，需要开通付费服务。\n\n我们将为您提供：\n✓ 专业的体质分析报告\n✓ 个性化调理方案\n✓ 一对一营养指导\n✓ 7×24小时咨询服务",
                 "您的情况需要更深入的分析。建议开通付费服务，我们将为您提供：\n\n✓ 详细的体质评估\n✓ 个性化养生方案\n✓ 专业营养指导\n✓ 持续跟踪服务"
+
+            ],
+            fatigueAnalysis: {
+                morning: "早晨疲惫可能与以下因素有关：\n1. 睡眠质量不佳\n2. 作息不规律\n3. 肝气郁滞\n\n初步建议：\n- 调整作息时间\n- 睡前泡脚\n- 避免熬夜",
+                afternoon: "下午疲惫常见原因：\n1. 午饭过饱\n2. 阳气下陷\n3. 气血不足\n\n初步建议：\n- 午饭适量\n- 午休15-20分钟\n- 适当运动",
+                night: "晚间疲惫分析：\n1. 工作压力\n2. 气血耗损\n3. 阴虚火旺\n\n初步建议：\n- 适度运动\n- 早睡早起\n- 情志调节"
+            },
+            sleepAnalysis: {
+                insomnia: "失眠问题分析：\n1. 心神不宁\n2. 阴虚火旺\n3. 脾胃不和\n\n初步建议：\n- 睡前泡脚\n- 按摩太阳穴\n- 避免刺激性食物",
+                lightSleep: "浅睡分析：\n1. 心脾两虚\n2. 肝气郁结\n3. 外界干扰\n\n初步建议：\n- 调节作息\n- 放松心情\n- 改善睡眠环境"
+            },
+            dietAnalysis: {
+                poorAppetite: "食欲不振分析：\n1. 脾胃虚弱\n2. 情志影响\n3. 消化功能减退\n\n初步建议：\n- 少食多餐\n- 清淡易消化\n- 规律进餐",
+                overeating: "易饥饿分析：\n1. 胃火旺盛\n2. 脾胃功能亢进\n3. 情绪性进食\n\n初步建议：\n- 控制进食速度\n- 选择粗粮\n- 补充优质蛋白"
+            }
+        };
+
+        // 添加上下文追踪
+        let conversationContext = {
+            lastTopic: null,
+            details: {},
+            analysisProvided: false
+
             ]
+
         };
 
         // 随机获取回复
@@ -246,8 +270,18 @@
 
         // 判断是否需要付费回复
         function needsPremiumResponse(text) {
+
+            const premiumKeywords = [
+                '方案', '建议', '治疗', '怎么办', '开方', '药', '调理',
+                '详细', '具体', '怎么做', '如何', '需要什么', '推荐'
+            ];
+            // 只有在已经提供了初步分析后，才会触发付费
+            return conversationContext.analysisProvided && 
+                   premiumKeywords.some(keyword => text.includes(keyword));
+
             const premiumKeywords = ['方案', '建议', '治疗', '怎么办', '开方', '药', '调理'];
             return premiumKeywords.some(keyword => text.includes(keyword));
+
         }
 
         // 添加消息到聊天界面
@@ -320,6 +354,57 @@
                 return;
             }
 
+
+            // 根据上下文和用户输入进行智能回复
+            if (conversationContext.lastTopic === 'fatigue' && !conversationContext.analysisProvided) {
+                // 分析疲惫具体情况
+                if (userMessage.includes('早上') || userMessage.includes('早晨')) {
+                    response = aiResponses.fatigueAnalysis.morning;
+                } else if (userMessage.includes('下午')) {
+                    response = aiResponses.fatigueAnalysis.afternoon;
+                } else if (userMessage.includes('晚上')) {
+                    response = aiResponses.fatigueAnalysis.night;
+                }
+                conversationContext.analysisProvided = true;
+            } else if (conversationContext.lastTopic === 'sleep' && !conversationContext.analysisProvided) {
+                // 分析睡眠问题
+                if (userMessage.includes('失眠')) {
+                    response = aiResponses.sleepAnalysis.insomnia;
+                } else if (userMessage.includes('浅') || userMessage.includes('容易醒')) {
+                    response = aiResponses.sleepAnalysis.lightSleep;
+                }
+                conversationContext.analysisProvided = true;
+            } else {
+                // 初始对话判断
+                if (userMessage.includes("你好") || userMessage.includes("您好")) {
+                    response = getRandomResponse('greeting');
+                    conversationContext.lastTopic = 'greeting';
+                } else if (userMessage.includes("疲惫") || userMessage.includes("累")) {
+                    response = getRandomResponse('fatigue');
+                    conversationContext.lastTopic = 'fatigue';
+                    conversationContext.analysisProvided = false;
+                } else if (userMessage.includes("睡眠") || userMessage.includes("失眠")) {
+                    response = getRandomResponse('sleep');
+                    conversationContext.lastTopic = 'sleep';
+                    conversationContext.analysisProvided = false;
+                } else if (userMessage.includes("饮食") || userMessage.includes("吃")) {
+                    response = getRandomResponse('diet');
+                    conversationContext.lastTopic = 'diet';
+                    conversationContext.analysisProvided = false;
+                } else if (userMessage.includes("方案") || userMessage.includes("建议")) {
+                    if (!conversationContext.analysisProvided) {
+                        response = "请先告诉我您的具体情况，这样我才能为您提供更准确的建议。";
+                    } else {
+                        // 如果已经提供了初步分析，这里触发付费提醒
+                        response = getRandomResponse('paywall');
+                        addMessageToChat(response, 'ai');
+                        addPaymentButton();
+                        return;
+                    }
+                } else {
+                    response = "请详细描述您的具体情况：\n- 主要不适症状\n- 持续时间\n- 是否影响日常生活\n- 是否已经就医";
+                }
+
             // 根据用户输入选择回复
             if (userMessage.includes("你好") || userMessage.includes("您好")) {
                 response = getRandomResponse('greeting');
@@ -333,6 +418,7 @@
                 response = "关于<strong>出汗</strong>的问题，请告诉我：\n1. 是活动时出汗多，还是休息时也会出汗？\n2. 是全身出汗还是局部出汗？\n3. 出汗后是否感觉疲惫？";
             } else {
                 response = "请详细描述您的具体情况：\n- 主要不适症状\n- 持续时间\n- 是否影响日常生活\n- 是否已经就医";
+
             }
 
             addMessageToChat(response, 'ai');
